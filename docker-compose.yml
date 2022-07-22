@@ -1,0 +1,106 @@
+version: '3.8'
+services:
+  app-redis-cluster:
+    image: redis
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.10
+    command: redis-cli --cluster create 172.40.0.11:7001 172.40.0.12:7002 172.40.0.13:7003 172.40.0.14:7004 172.40.0.15:7005 172.40.0.16:7006 --cluster-replicas 1 --cluster-yes
+    depends_on:
+      - app-redis-1
+      - app-redis-2
+      - app-redis-3
+      - app-redis-4
+      - app-redis-5
+      - app-redis-6
+  app-redis-1: 
+    image: redis
+    container_name: app-redis-1
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - 7001:7001
+      - 17001:17001
+    volumes:
+      - ./7001/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.11
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+  app-redis-2: 
+    image: redis
+    container_name: app-redis-2
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - 7002:7002
+      - 17002:17002
+    volumes:
+      - ./7002/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.12
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+  app-redis-3: 
+    image: redis
+    container_name: app-redis-3
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - 7003:7003
+      - 17003:17003
+    volumes:
+      - ./7003/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.13
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+  app-redis-4: 
+    image: redis
+    container_name: app-redis-4
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - 7004:7004
+      - 17004:17004
+    volumes:
+      - ./7004/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.14
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+  app-redis-5: 
+    image: redis
+    container_name: app-redis-5
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - 7005:7005
+      - 17005:17005
+    volumes:
+      - ./7005/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.15
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+  app-redis-6: 
+    image: redis
+    container_name: app-redis-6
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - 7006:7006
+      - 17006:17006
+    volumes:
+      - ./7006/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 172.40.0.16
+    command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+
+networks:
+  app_subnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.40.0.0/27
